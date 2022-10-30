@@ -32,17 +32,20 @@ int main(void)
   // printf("sizeof(struct)=%d\n", sizeof(a));
   // printf("sizeof(pointer)=%d\n", sizeof(p));
 
-  struct student_st stu, tmp;
+  STU stu, tmp;
   char newname[NAMESIZE];
-  int choice;
+  int choice, n;
 
   do
   {
     menu();
-    scanf("%d", &choice);
+    n = scanf("%d", &choice);
+    if (n != 1)
+      exit(1);
     switch (choice)
     {
     case 1:
+      tmp.name = malloc(NAMESIZE);
       printf("Please enter for the stu[id name math chinese]:\n");
       scanf("%d%s%d%d", &tmp.id, tmp.name, &tmp.math, &tmp.chinese);
       stu_set(&stu, &tmp);

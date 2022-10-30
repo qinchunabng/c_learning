@@ -1,19 +1,19 @@
 #ifndef STUDENT_H__
 #define STUDENT_H__
 
-#define NAMESIZE 32
+#define NAMESIZE 1024
 
-struct student_st
+typedef struct student_st
 {
   int id;
-  char name[NAMESIZE];
+  char *name;
   int year, month, day;
   int math;
   int chinese;
-};
+} STU;
 
-void stu_set(struct student_st *p, const struct student_st *q);
-void stu_show(struct student_st *p);
-void stu_changename(struct student_st *p, char *newname);
+void stu_set(STU *p, const STU *q);
+void stu_show(STU *p);
+void stu_changename(STU *p, char *newname);
 void menu();
 #endif
