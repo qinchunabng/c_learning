@@ -48,9 +48,9 @@ void jose_show(struct node_st *list)
   printf("%d\n", cur->data);
 }
 
-void jose_kill(struct node_st *list, int n)
+void jose_kill(struct node_st **list, int n)
 {
-  struct node_st *cur = list, *node;
+  struct node_st *cur = *list, *node;
   int i = 1;
   while (cur != cur->next)
   {
@@ -68,6 +68,7 @@ void jose_kill(struct node_st *list, int n)
     cur = node->next;
     i = 1;
   }
+  *list = cur;
   printf("\n");
 }
 
@@ -76,6 +77,7 @@ int main(void)
   struct node_st *list;
   list = jose_create(JOSE_NR);
   jose_show(list);
-  jose_kill(list, 3);
+  jose_kill(&list, 3);
+  jose_show(list);
   exit(0);
 }
