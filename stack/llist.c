@@ -105,11 +105,15 @@ static struct llist_node_st *find_(LLIST *ptr, const void *key, llist_cmp *cmp)
   return NULL;
 }
 
-void *llist_find(LLIST *ptr, const void *key, llist_cmp *cmp)
+int llist_find(LLIST *ptr, const void *key, llist_cmp *cmp, void *data)
 {
-  struct llist_node_st *data;
-  data = find_(ptr, key, cmp);
-  return data != NULL ? data->data : NULL;
+  struct head_st *handler = ptr;
+  struct llist_node_st *node;
+  node = find_(ptr, key, cmp);
+  if (node == NULL)
+    return -1;
+  memcpy(data, node->data, handler->size);
+  return 0;
 }
 
 int llist_fetch(LLIST *ptr, const void *key, llist_cmp *cmp, void *data)

@@ -5,6 +5,18 @@
 
 typedef int datatype;
 
+static void print_d(const void *ptr)
+{
+  const datatype *data = ptr;
+  printf("%d\n", *data);
+}
+
+static void print_c(const void *ptr)
+{
+  const datatype *data = ptr;
+  printf("%c\n", *data);
+}
+
 static void compute(STACK *snum, datatype *op)
 {
   datatype n1, n2, n;
@@ -64,6 +76,12 @@ static int get_pri(datatype op)
 static void deal_op(STACK *snum, STACK *sop, datatype op)
 {
   datatype old_op;
+  // printf("\n\n");
+  // printf("%s:%c\n", __FUNCTION__, op);
+  // printf("snum:\n");
+  // stack_travel(snum, print_d);
+  // printf("sop:\n");
+  // stack_travel(sop, print_c);
   if (stack_isempty(sop) || op == '(')
   {
     stack_push(sop, &op);
@@ -83,6 +101,7 @@ static void deal_op(STACK *snum, STACK *sop, datatype op)
       break;
     stack_pop(sop, &old_op);
   }
+  stack_push(sop, &op);
 }
 
 int main(void)
@@ -126,6 +145,12 @@ int main(void)
   if (flag)
     stack_push(snum, &value);
 
+  // printf("\n\n");
+  // printf("%s:\n", __FUNCTION__);
+  // printf("snum:\n");
+  // stack_travel(snum, print_d);
+  // printf("sop:\n");
+  // stack_travel(sop, print_c);
   while (!stack_isempty(sop))
   {
     stack_pop(sop, &old_op);

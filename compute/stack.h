@@ -18,4 +18,6 @@ int stack_isempty(STACK *);
 
 void stack_destroy(STACK *);
 
+void stack_travel(STACK *, llist_op *);
+
 #endif

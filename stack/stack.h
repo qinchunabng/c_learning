@@ -12,7 +12,7 @@ int stack_push(STACK *, void *);
 
 int stack_pop(STACK *, void *);
 
-void *stack_top(STACK *);
+int stack_top(STACK *, void *);
 
 int stack_isempty(STACK *);
 

@@ -37,3 +37,8 @@ void stack_destroy(STACK *ptr)
 {
   llist_destroy(ptr);
 }
+
+void stack_travel(STACK *ptr, llist_op *op)
+{
+  llist_travel(ptr, op);
+}
