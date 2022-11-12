@@ -11,11 +11,11 @@ static void print_d(const void *ptr)
   printf("%d\n", *data);
 }
 
-static void print_c(const void *ptr)
-{
-  const datatype *data = ptr;
-  printf("%c\n", *data);
-}
+// static void print_c(const void *ptr)
+// {
+//   const datatype *data = ptr;
+//   printf("%c\n", *data);
+// }
 
 static void compute(STACK *snum, datatype *op)
 {
@@ -106,18 +106,29 @@ static void deal_op(STACK *snum, STACK *sop, datatype op)
 
 int main(void)
 {
-  int i, value = 0, flag = 0;
+  int i = 0, value = 0, flag = 0;
   char str[] = "(11+3)*2-5";
   STACK *snum, *sop;
   datatype old_op, res;
+  printf("%s\n", str);
+
   snum = stack_create(sizeof(datatype));
   if (snum == NULL)
+  {
+    printf("create snum failed.\n");
     exit(1);
+  }
+
   sop = stack_create(sizeof(datatype));
   if (sop == NULL)
+  {
+    printf("create sop failed.\n");
     exit(1);
+  }
+
   while (str[i] != '\0')
   {
+    printf("%c\n", str[i]);
     if (str[i] >= '0' && str[i] <= '9')
     {
       value = value * 10 + (str[i] - '0');

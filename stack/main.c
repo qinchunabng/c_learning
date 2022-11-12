@@ -13,9 +13,9 @@ struct score_st
   int chinese;
 };
 
-void print_s(void *r)
+void print_s(const void *r)
 {
-  struct score_st *ptr = r;
+  const struct score_st *ptr = r;
   printf("%d %s %d %d\n", ptr->id, ptr->name, ptr->chinese, ptr->math);
 }
 
@@ -24,7 +24,6 @@ int main(void)
   int i, ret;
   STACK *st;
   struct score_st tmp;
-  void *d = NULL;
   st = stack_create(sizeof(struct score_st));
   if (st == NULL)
     exit(1);
@@ -37,9 +36,9 @@ int main(void)
     stack_push(st, &tmp);
   }
 
-  d = stack_top(st);
-  if (d != NULL)
-    print_s(d);
+  ;
+  if (stack_top(st, &tmp) == 0)
+    print_s(&tmp);
 
   while (1)
   {

@@ -25,9 +25,13 @@ struct head_st
 LLIST *llist_create(int size)
 {
   struct head_st *handler;
+  // printf("%s:%d,size:%d\n", __FUNCTION__, __LINE__, size);
   handler = malloc(sizeof(*handler));
   if (handler == NULL)
+  {
+    fprintf(stderr, "malloc handler failed.\n");
     return NULL;
+  }
 
   handler->size = size;
   handler->head.prev = &handler->head;

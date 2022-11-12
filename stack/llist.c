@@ -16,7 +16,7 @@ struct head_st
   int size;
   struct llist_node_st head;
   int (*insert)(LLIST *, const void *, int);
-  void *(*find)(LLIST *, const void *, llist_cmp *);
+  int (*find)(LLIST *, const void *, llist_cmp *, void *);
   int (*fetch)(LLIST *, const void *, llist_cmp *, void *);
   int (*delete)(LLIST *, const void *, llist_cmp *);
   void (*travel)(LLIST *, llist_op *);
