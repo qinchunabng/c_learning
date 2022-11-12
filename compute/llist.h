@@ -16,7 +16,7 @@ void llist_destroy(LLIST *);
 int llist_insert(LLIST *, const void *data, int mode);
 int llist_isempty(LLIST *);
 
-void *llist_find(LLIST *, const void *key, llist_cmp *);
+int llist_find(LLIST *ptr, const void *key, llist_cmp *cmp, void *data);
 int llist_fetch(LLIST *, const void *key, llist_cmp *, void *data);
 int llist_delete(LLIST *, const void *key, llist_cmp *);
 

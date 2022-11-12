@@ -16,7 +16,7 @@ struct head_st
   int size;
   struct llist_node_st head;
   int (*insert)(LLIST *, const void *, int);
-  void *(*find)(LLIST *, const void *, llist_cmp *);
+  int *(*find)(LLIST *, const void *, llist_cmp *, void *);
   int (*fetch)(LLIST *, const void *, llist_cmp *, void *);
   int (*delete)(LLIST *, const void *, llist_cmp *);
   void (*travel)(LLIST *, llist_op *);
@@ -40,6 +40,13 @@ LLIST *llist_create(int size)
   handler->travel = llist_travel;
   return handler;
 }
+
+int llist_isempty(LLIST *ptr)
+{
+  struct head_st *handler = ptr;
+  return ptr == NULL || handler->head.next == &handler->head;
+}
+
 void llist_destroy(LLIST *ptr)
 {
   struct head_st *handler = ptr;
@@ -51,13 +58,6 @@ void llist_destroy(LLIST *ptr)
   }
   free(handler);
 }
-
-int llist_isempty(LLIST *ptr)
-{
-  struct head_st *handler = ptr;
-  return ptr == NULL || handler->head.next == &handler->head;
-}
-
 int llist_insert(LLIST *ptr, const void *data, int mode)
 {
   struct head_st *handler = ptr;
@@ -105,11 +105,15 @@ static struct llist_node_st *find_(LLIST *ptr, const void *key, llist_cmp *cmp)
   return NULL;
 }
 
-void *llist_find(LLIST *ptr, const void *key, llist_cmp *cmp)
+int llist_find(LLIST *ptr, const void *key, llist_cmp *cmp, void *data)
 {
-  struct llist_node_st *data;
-  data = find_(ptr, key, cmp);
-  return data != NULL ? data->data : NULL;
+  struct head_st *handler = ptr;
+  struct llist_node_st *node;
+  node = find_(ptr, key, cmp);
+  if (node == NULL)
+    return -1;
+  memcpy(data, node->data, handler->size);
+  return 0;
 }
 
 int llist_fetch(LLIST *ptr, const void *key, llist_cmp *cmp, void *data)

@@ -24,6 +24,7 @@ int main(void)
   int i, ret;
   STACK *st;
   struct score_st tmp;
+  void *d = NULL;
   st = stack_create(sizeof(struct score_st));
   if (st == NULL)
     exit(1);
@@ -36,6 +37,10 @@ int main(void)
     stack_push(st, &tmp);
   }
 
+  d = stack_top(st);
+  if (d != NULL)
+    print_s(d);
+
   while (1)
   {
     ret = stack_pop(st, &tmp);
@@ -45,6 +50,8 @@ int main(void)
     }
     print_s(&tmp);
   }
+  if (stack_isempty(st))
+    printf("Stack is empty now.\n");
   stack_destroy(st);
   exit(0);
 }

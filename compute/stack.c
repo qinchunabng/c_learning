@@ -23,9 +23,9 @@ int stack_pop(STACK *ptr, void *data)
   return llist_fetch(ptr, (void *)0, always_match, data);
 }
 
-void *stack_top(STACK *ptr)
+int stack_top(STACK *ptr, void *data)
 {
-  return llist_find(ptr, (void *)0, always_match);
+  return llist_find(ptr, (void *)0, always_match, data);
 }
 
 int stack_isempty(STACK *ptr)
