@@ -46,7 +46,7 @@ void print_s(const void *r)
  *    cp xx.so ~/lib
  *    export LD_LIBRARY_PATH=~/lib
  * 4) 在/etc/ld.so.conf中添加路径
- *    /sbin/config 重读/etc/ld.so.conf
+ *    /sbin/ldconfig 重读/etc/ld.so.conf
  *
  *
  * 3. 查看动态库依赖
