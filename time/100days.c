@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <time.h>
 
-#define TIMESTRSIZE 50
+#define TIMESTRSIZE 1024
 
 int main()
 {
