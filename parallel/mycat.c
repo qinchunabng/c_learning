@@ -9,7 +9,7 @@
 
 int main(int argc, char **argv)
 {
-  int fds, fdd;
+  int fds, fdd = 1;
   char buf[BUFSIZE];
   int len, ret, pos;
   if (argc < 3)
@@ -30,14 +30,6 @@ int main(int argc, char **argv)
       }
     }
   } while (fds < 0);
-
-  fdd = open(argv[2], O_WRONLY | O_CREAT, 0600);
-  if (fdd < 0)
-  {
-    close(fds);
-    perror("open()");
-    exit(1);
-  }
 
   while (1)
   {
