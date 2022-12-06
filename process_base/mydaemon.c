@@ -6,8 +6,12 @@
 #include <fcntl.h>
 #include <syslog.h>
 #include <errno.h>
+#include <signal.h>
+#include <string.h>
 
 #define FNAME "/tmp/out"
+
+static FILE *fp;
 
 static int daemonize()
 {
@@ -49,10 +53,30 @@ static int daemonize()
   // umask(0);
 }
 
+static void daemon_exit(int s)
+{
+  fclose(fp);
+  closelog();
+  exit(0);
+}
+
 int main()
 {
-  FILE *fp;
   int i;
+  struct sigaction sa;
+
+  sa.sa_handler = daemon_exit;
+  sigemptyset(&sa.sa_mask);
+  sigaddset(&sa.sa_mask, SIGQUIT);
+  sigaddset(&sa.sa_mask, SIGINT);
+  sigaddset(&sa.sa_mask, SIGTERM);
+  sa.sa_flags = 0;
+  sigaction(SIGINT, &sa, NULL);
+  sigaction(SIGQUIT, &sa, NULL);
+  sigaction(SIGTERM, &sa, NULL);
+  // signal(SIGINT, daemon_exit);
+  // signal(SIGQUIT, daemon_exit);
+  // signal(SIGTERM, daemon_exit);
 
   openlog("mydaemon", LOG_PID, LOG_DAEMON);
 

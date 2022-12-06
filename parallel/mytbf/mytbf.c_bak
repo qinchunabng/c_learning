@@ -3,7 +3,6 @@
 #include <errno.h>
 #include <unistd.h>
 #include <signal.h>
-#include <sys/time.h>
 
 #include "mytbf.h"
 
@@ -11,11 +10,10 @@
 
 static struct mytbf_st *job[MYTBF_MAX];
 static volatile int inited = 0;
-static struct sigaction alrm_sa_save;
 
 typedef void (*sighandler_t)(int);
 
-// static sighandler_t alrm_handler_save;
+static sighandler_t alrm_handler_save;
 
 struct mytbf_st
 {
@@ -25,20 +23,13 @@ struct mytbf_st
   int pos;
 };
 
-static void alrm_action(int s, siginfo_t *infp, void *unused)
+static void alrm_handler(int s)
 {
   int i;
-
-  // printf("SI_USER=%d  SI_TIMER=%d SI_TKILL=%d SIGALRM=%d\n", SI_USER, SI_TIMER, SI_TKILL, SIGALRM);
-  printf("%s:%d infp->si_code:%d \n", __FUNCTION__, __LINE__, infp->si_code);
-  if (infp->si_code != SI_KERNEL && infp->si_code != SI_USER)
-    return;
-
-  // printf("%s:%d\n", __FUNCTION__, __LINE__);
-  // alarm(1);
+  alarm(1);
   for (i = 0; i < MYTBF_MAX; i++)
   {
-    // printf("%s:%d job[%d]=\n", __FUNCTION__, __LINE__, i);
+    // printf("%s:%d job[%d]=\n", __FUNCTION__, __LINE__);
     if (job[i] == NULL)
       continue;
     job[i]->token += job[i]->cps;
@@ -50,49 +41,16 @@ static void alrm_action(int s, siginfo_t *infp, void *unused)
 static void module_unload()
 {
   int i;
-  struct itimerval itv;
-
-  sigaction(SIGALRM, &alrm_sa_save, NULL);
-
-  itv.it_interval.tv_sec = 1;
-  itv.it_interval.tv_usec = 0;
-  itv.it_value.tv_sec = 1;
-  itv.it_value.tv_usec = 0;
-  setitimer(ITIMER_REAL, &itv, NULL);
-  // signal(SIGALRM, alrm_handler_save);
-  // alarm(0);
+  signal(SIGALRM, alrm_handler_save);
+  alarm(0);
   for (i = 0; i < MYTBF_MAX; i++)
     free(job[i]);
 }
 
 static void module_load()
 {
-  // alrm_handler_save = signal(SIGALRM, alrm_handler);
-  // alarm(1);
-  printf("%s:%d\n", __FUNCTION__, __LINE__);
-  struct sigaction sa;
-  struct itimerval itv;
-
-  sa.sa_sigaction = alrm_action;
-  sigemptyset(&sa.sa_mask);
-  sa.sa_flags = SA_SIGINFO;
-
-  if (sigaction(SIGALRM, &sa, &alrm_sa_save) < 0)
-  {
-    perror("sigaction()");
-    exit(0);
-  }
-  // printf("%s:%d\n", __FUNCTION__, __LINE__);
-
-  itv.it_interval.tv_sec = 1;
-  itv.it_interval.tv_usec = 0;
-  itv.it_value.tv_sec = 1;
-  itv.it_value.tv_usec = 0;
-  if (setitimer(ITIMER_REAL, &itv, NULL) < 0)
-  {
-    perror("setitimer()");
-    exit(1);
-  }
+  alrm_handler_save = signal(SIGALRM, alrm_handler);
+  alarm(1);
   // printf("%s:%d\n", __FUNCTION__, __LINE__);
 
   atexit(module_unload);

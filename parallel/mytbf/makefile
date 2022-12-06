@@ -1,6 +1,6 @@
-all:mytbf
+all:mytbf_sa
 
-mytbf:main.o mytbf.o
+mytbf_sa:main.o mytbf.o
 	$(CC) $^ -o $@
 
 clean:
