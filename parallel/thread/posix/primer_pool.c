@@ -10,6 +10,7 @@
 
 static int num = 0;
 static pthread_mutex_t mut_num = PTHREAD_MUTEX_INITIALIZER;
+static pthread_cond_t cond_num = PTHREAD_COND_INITIALIZER;
 
 static void *thr_prime(void *p);
 
@@ -35,11 +36,13 @@ int main()
 
     while (num != 0)
     {
-      pthread_mutex_unlock(&mut_num);
-      sched_yield();
-      pthread_mutex_lock(&mut_num);
+    //   pthread_mutex_unlock(&mut_num);
+    //   sched_yield();
+    //   pthread_mutex_lock(&mut_num);
+      pthread_cond_wait(&cond_num, &mut_num);
     }
     num = i;
+    pthread_cond_signal(&cond_num);
     pthread_mutex_unlock(&mut_num);
   }
 
@@ -47,11 +50,13 @@ int main()
   pthread_mutex_lock(&mut_num);
   while (num != 0)
   {
-    pthread_mutex_unlock(&mut_num);
-    sched_yield();
-    pthread_mutex_lock(&mut_num);
+    // pthread_mutex_unlock(&mut_num);
+    // sched_yield();
+    // pthread_mutex_lock(&mut_num);
+    pthread_cond_wait(&cond_num, &mut_num);
   }
   num = -1;
+  pthread_cond_broadcast(&cond_num);
   pthread_mutex_unlock(&mut_num);
 
   // printf("%s:%d\n", __FUNCTION__, __LINE__);
@@ -62,6 +67,7 @@ int main()
   // printf("%s:%d\n", __FUNCTION__, __LINE__);
 
   pthread_mutex_destroy(&mut_num);
+  pthread_cond_destroy(&cond_num);
   exit(0);
 }
 
@@ -74,9 +80,10 @@ static void *thr_prime(void *p)
     pthread_mutex_lock(&mut_num);
     while (num == 0)
     {
-      pthread_mutex_unlock(&mut_num);
-      sched_yield();
-      pthread_mutex_lock(&mut_num);
+      // pthread_mutex_unlock(&mut_num);
+      // sched_yield();
+      // pthread_mutex_lock(&mut_num);
+      pthread_cond_wait(&cond_num, &mut_num);
     }
     if (num == -1)
     {
@@ -85,6 +92,7 @@ static void *thr_prime(void *p)
     }
     i = num;
     num = 0;
+    pthread_cond_broadcast(&cond_num);
     pthread_mutex_unlock(&mut_num);
 
     flag = 1;
