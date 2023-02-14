@@ -180,7 +180,11 @@ int main(int argc, char *argv[])
 
     /*创建频道线程*/
     for(i=0;i<list_size;i++){
-        thr_channel_create(list+i); 
+        err = thr_channel_create(list+i); 
+        if(err){
+            syslog(LOG_ERR, "thr_channel_create():%s", strerror(-err));
+            exit(1);
+        }
     }
 
     syslog(LOG_DEBUG, "%d channel threads created.", i);
