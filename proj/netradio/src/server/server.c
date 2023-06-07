@@ -46,7 +46,7 @@ static int daemonize(void){
     }
 
     if(pid > 0) // parent process
-        eixt(0);
+        exit(0);
 
     int fd = open("/dev/null", O_RDWR);
     if(fd < 0){
