@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <errno.h>
 #include <string.h>
+#include <unistd.h>
 
 void test(){
   int count=0;
@@ -34,6 +35,17 @@ void test2(){
   fflush(NULL);
 }
 
+void test3(){
+  putchar('a');
+  write(1,"b",1);
+
+  putchar('a');
+  write(1,"b",1);
+
+  putchar('a');
+  write(1,"b",1);
+}
+
 int main()
 {
   // FILE *fp;
@@ -52,6 +64,7 @@ int main()
   // printf("%d\n", i);
   // test1();
 
-  test2();
+  // test2();
+  test3();
   return 0;
 }
